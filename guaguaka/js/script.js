@@ -1,7 +1,7 @@
 (function () {
     "use strict";
 
-    var cbox,ctx,ismousedown,isharf;
+    var cbox,ctx,ismousedown,isharf = false;
 
     var fontem = parseInt(window.getComputedStyle(document.documentElement, null).getPropertyValue("font-size"));
 
@@ -17,6 +17,9 @@
         cbox.addEventListener("mousemove", eventMove, false);
         cbox.addEventListener("mouseup", eventUp, false);
 
+        cbox.addEventListener("touchstart", eventDown, false);
+        cbox.addEventListener("touchmove", eventMove, false);
+        cbox.addEventListener("touchend", eventUp, false);
         initCanvas();
 
         function initCanvas() {
@@ -29,14 +32,13 @@
             ctx.font = "Bold 30px Arial";
             ctx.textAlign = "center";
             ctx.fillStyle = "#999999";
-            ctx.fillText("刮一刮",cbox.width/2,50);
+            ctx.fillText("刮一刮",cbox.width/2,cbox.height/2 + 15);
 
         }
 
         function eventDown(e) {
             e.preventDefault();
             ismousedown = true;
-
         }
 
         function eventMove(e) {
@@ -75,6 +77,19 @@
 
         function eventUp(e) {
             e.preventDefault();
+            //得到canvas的全部数据
+            var a = ctx.getImageData(0,0,cbox.width,cbox.height);
+            var j=0;
+            for(var i=3;i<a.data.length;i++){
+
+                if(a.data[i]===0){
+                    j++;
+                }
+            }
+            //当被刮开的区域等于一半时，则可以开始处理结果
+            if(j>=a.data.length/2){
+                isharf = true;
+            }
             ismousedown = false;
         }
     };
