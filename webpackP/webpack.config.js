@@ -15,5 +15,5 @@ module.exports = {
         inline: true,
         historyApiFallback: true
     }
-};
+}
 

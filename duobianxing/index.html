@@ -2,18 +2,53 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>五角星</title>
     <style>
-        div{
+        .container {
+            width: 100px;
+            height: 100px;
+            margin: 100px auto;
+            position: relative;
+        }
+
+        .san {
             width:100px;
-            height:87px;
-            margin: 50px auto;
+            height:100px;
+            /*margin: 50px auto;*/
             background:#c00;
-            -webkit-clip-path:polygon(0% 50%, 50%  0%,100% 100%);
+            -webkit-clip-path:polygon(0% 38%, 50%  0%,100% 38%);
+            transform-origin: 50% 15%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .div1 {
+            transform: rotate(115deg);
+        }
+
+        .div2 {
+            transform: rotate(180deg);
+        }
+
+        .div3 {
+            transform: rotate(245deg);
         }
     </style>
 </head>
 <body>
-    <div></div>
+    <div class="container">
+        <div class="div1 san"></div>
+        <div class="div2 san"></div>
+        <div class="div3 san"></div>
+    </div>
+
+    <script>
+//        history.pushState({title: document.title},document.title, 'www.baidu.com');
+//        console.log(history);
+//        console.log(history.length)
+//        history.replaceState()
+        JSON.stringify()
+    </script>
 </body>
 </html>
