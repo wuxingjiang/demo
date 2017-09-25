@@ -11,6 +11,11 @@ var data2 = arr.map(function(value, index, array) {
     return parseInt(Math.random() * 100);
 });
 
+var data3 = arr.map(function(value, index, array) {
+    return parseInt(Math.random() * 100);
+});
+
+
 /**
  * createLine two numbers.
  * @param {string} id The DOM id.
@@ -98,7 +103,7 @@ function DataPlatform(container) {
         show: 'first',
     };
     this.container = container;
-    this.vm = null;
+    this.dom = document.getElementById(this.container);
     this.winLoad = winLoad1;
     this.tpl = {
         nav: '<ul class="nav">'
@@ -110,15 +115,16 @@ function DataPlatform(container) {
             + '</ul>',
         section: '<div class="section"></div>',
         list: {
-            0: function() {
-                var str = '<header class="all-head">整体数据<span class="all-head-icon">?</span></header><div class="all"><div id="allLeftHistogram" class="all-left"></div><div class="all-right"><div class="all-right-list all-right-list-top"><p class="all-right-list-title">目前在期学院</p><p class="all-right-list-number">4506</p></div><div class="all-right-list all-right-list-center"><p class="all-right-list-title">昨日总新增用户</p><p class="all-right-list-number">2506</p></div><div class="all-right-list all-right-list-bottom"><p class="all-right-list-title">昨日新增付费用户</p><p class="all-right-list-number">1506</p></div></div></div>';
+            allData: function() {
+                var str = '<header class="all-head">整体数据<span class="all-head-icon">?</span></header><div class="all"><div id="echartsContainer" class="all-left"></div><div class="all-right"><div class="all-right-list all-right-list-top"><p class="all-right-list-title">目前在期学院</p><p class="all-right-list-number">4506</p></div><div class="all-right-list all-right-list-center"><p class="all-right-list-title">昨日总新增用户</p><p class="all-right-list-number">2506</p></div><div class="all-right-list all-right-list-bottom"><p class="all-right-list-title">昨日新增付费用户</p><p class="all-right-list-number">1506</p></div></div></div>';
                 return str;
             },
-            1: function() {
-                return 'dsdsds';
+            newUser: function() {
+                var str = '<header class="section-head"><div class="section-select-bg"><select class="section-select-content" name="" id=""><option value="all">全部</option><option value="month">月</option><option value="halfYear">半年</option><option value="yeal">一年</option></select></div><input id="sectionDateStart" placeholder="请输入日期" onclick="laydate()" class="laydate-icon section-date"> <span class="section-tips">至</span> <input id="sectionDateEnd" placeholder="请输入日期"  onclick="laydate()" class="laydate-icon section-date"> <span class="section-tips">最多显示365天数据</span><div class="section-label"><span class="active">周</span><span>月</span><span>半年</span><span>年</span></div></header><div id="echartsContainer" class="newUser"></div>';
+                return str;
             },
-            2: function() {
-                var str = '<header class="all-head">新增数据<span class="all-head-icon">?</span></header><div id="newUserLine" class="newUser"></div>';
+            other: function() {
+                var str = '<header class="section-head"><input id="sectionDateStart" placeholder="请输入日期" onclick="laydate()" class="laydate-icon section-date"> <span class="section-tips">至</span> <input id="sectionDateEnd" placeholder="请输入日期"  onclick="laydate()" class="laydate-icon section-date"> <span class="section-tips">最多显示365天数据</span><div class="section-label"><span class="active">周</span><span>月</span><span>半年</span><span>年</span></div></header><div id="echartsContainer" class="newUser"></div>';
                 return str;
             },
         },
@@ -132,20 +138,29 @@ function DataPlatform(container) {
 DataPlatform.prototype = {
     container: DataPlatform,
     init: function() {
-        console.log(this);
-        console.log(this.winLoad.show);
-
         this.render();
         this.addEvent();
+        
     },
     render: function() {
         this.addCss();
         var childNodeStr = this.mosaicStr(this.tpl);
         var containerDiv = document.getElementById(this.container);
         containerDiv.innerHTML = '' + childNodeStr;
-        console.log(containerDiv);
         this.vm = containerDiv;
         this.labelChanges(0);
+        
+    },
+    datePickerChanges: function() {
+        var inputArr = document.getElementById('container').getElementsByTagName('input');
+
+        inputArr = Array.prototype.slice.call(inputArr);
+
+        inputArr.map(function(value) {
+            value.onchange = function (obj) {
+                console.log(obj.value);
+            }
+        });
     },
     addEvent: function() {
         var self = this;
@@ -160,18 +175,42 @@ DataPlatform.prototype = {
                         value.setAttribute('class', value.getAttribute('class').replace('active', ' '));
                     });
                     this.setAttribute('class', this.getAttribute('class') + ' ' + 'active');
-                    console.log(index);
                     self.labelChanges(index);
                 };
-                console.log(self);
             };
         });
-        console.log(navList);
+        this.dom.onclick = function(e) {
+            if(e.target && e.target.nodeName.toUpperCase() =="SPAN") {
+                var childArr = Array.prototype.slice.call(e.target.parentNode.childNodes);
+                childArr.forEach(function(value) {
+                    value.setAttribute('class', ' ')
+                })
+                e.target.setAttribute('class', 'active')
+            }
+        }
     },
     labelChanges: function(index) {
-        this.vm.getElementsByClassName('section')[0].innerHTML = this.tpl.list[index]();
-        if(typeof this.renderCharts[index] && this.renderCharts[index]) {
-            this.renderCharts[index].call(this);
+       
+        var htmlStr = '';
+        var obj = this.tpl.list
+        switch (index) {
+            case 0:
+                htmlStr = obj.allData();
+                this.vm.getElementsByClassName('section')[0].innerHTML = htmlStr;
+                this.renderCharts.allData.call(this);
+                break ;
+            case 2:
+                htmlStr = obj.newUser();
+                this.vm.getElementsByClassName('section')[0].innerHTML = htmlStr;
+                this.renderCharts.newUser.call(this);
+                this.datePickerChanges();
+                break ;
+            default :
+                htmlStr = obj.other();
+                this.vm.getElementsByClassName('section')[0].innerHTML = htmlStr;
+                this.renderCharts.other.call(this);
+                this.datePickerChanges();
+                break;
         }
     },
     addCss: function() {
@@ -208,9 +247,8 @@ DataPlatform.prototype = {
         myChart.setOption(option);
     },
     renderCharts: {
-        0: function() {
-            this.createCharts('allLeftHistogram', {
-                color: ['#3398DB'],
+        allData: function() {
+            this.createCharts('echartsContainer', {
                 tooltip: {
                     trigger: 'item',
                 },
@@ -221,16 +259,9 @@ DataPlatform.prototype = {
                     containLabel: true,
                 },
                 xAxis: {
-                    name: 'end',
                     type: 'category',
                     data: ['目前在期学员', '昨日总新增用户', '昨日新增付费用户'],
-                    splitNumber: '10',
-                    axisTick: {
-                        alignWithLabel: true,
-                    },
-                    axisLabel: {
-                        formatter: '{value}',
-                    },
+                   
                 },
                 yAxis: [
                     {
@@ -278,15 +309,21 @@ DataPlatform.prototype = {
                 },
             });
         },
-        1: function() {
-
-        },
-        2: function() {
-            this.createCharts('newUserLine', {
-                color: ['#3398DB'],
-                tooltip: {
-                    trigger: 'item',
+        newUser: function() {
+            this.createCharts('echartsContainer', {
+                legend: {
+                    data: ['邮件营销', '联盟广告', '联盟广告2']
                 },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                dataZoom: [
+                    {
+                        startValue: year[year.length - 14],
+                    }, {
+                        type: 'inside',
+                    }
+                ],
                 grid: {
                     left: '3%',
                     right: '4%',
@@ -296,7 +333,7 @@ DataPlatform.prototype = {
                 xAxis: [
                     {
                         type: 'category',
-                        data: ['目前在期学员', '昨日总新增用户', '昨日新增付费用户'],
+                        data: year,
                         axisTick: {
                             alignWithLabel: true,
                         },
@@ -307,38 +344,137 @@ DataPlatform.prototype = {
                         type: 'value',
                     },
                 ],
-                series: {
-                    type: 'bar',
-                    data: [
-                         {
-                            name: '目前在期学员',
-                            value: 5000,
-                            itemStyle: {
-                            normal: {
-                                color: '#6cb6f5',
-                                },
-                            },
-                        },
-                         {
-                        name: '昨日总新增用户',
-                        value: 300,
+                series: [
+                    {
+                        name: '邮件营销',
+                        type: 'line',
+                        stack: '总量',
+                        areaStyle: {normal: {}},
+                        data: data1,
                         itemStyle: {
                             normal: {
-                                color: '#f7b547',
-                                },
-                            },
+                                color: 'rgb(248, 145, 119)'
+                            }
                         },
-                        {
-                        name: '昨日新增付费用户',
-                        value: 450,
+                        areaStyle: {
+                            normal: {
+                                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                    offset: 1,
+                                    color: 'rgb(255, 255, 254)'
+                                }, {
+                                    offset: 0,
+                                    color: 'rgb(248, 138, 111)'
+                                }])
+                            }
+                        },
+                    },
+                    {
+                        name: '联盟广告',
+                        type: 'line',
+                        stack: '总量',
+                        areaStyle: {normal: {}},
+                        data: data2,
                         itemStyle: {
                             normal: {
-                                color: '#f88a6f',
-                                },
-                            },
+                                color: 'rgb(242, 204, 136)'
+                            }
                         },
-                    ],
+                        areaStyle: {
+                            normal: {
+                                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                    offset: 1,
+                                    color: 'rgb(255, 255, 255)'
+                                }, {
+                                    offset: 0,
+                                    color: 'rgb(242, 205, 136)'
+                                }])
+                            }
+                        },
+                    },
+                    {
+                        name: '联盟广告2',
+                        type: 'line',
+                        stack: '总量',
+                        areaStyle: {normal: {}},
+                        data: data3,
+                        itemStyle: {
+                            normal: {
+                                color: 'rgb(108, 182, 245)'
+                            }
+                        },
+                        areaStyle: {
+                            normal: {
+                                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                    offset: 1,
+                                    color: 'rgb(255, 255, 255)'
+                                }, {
+                                    offset: 0,
+                                    color: 'rgb(108, 182, 245)'
+                                }])
+                            }
+                        },
+                    },
+                ],
+            });
+        },
+        other: function() {
+            this.createCharts('echartsContainer', {
+                color: ['#3398DB'],
+                tooltip: {
+                    trigger: 'axis'
                 },
+                dataZoom: [
+                    {
+                        startValue: year[year.length - 14],
+                    }, {
+                        type: 'inside',
+                    }
+                ],
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true,
+                },
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: year,
+                        axisTick: {
+                            alignWithLabel: true,
+                        },
+                    },
+                ],
+                yAxis: [
+                    {
+                        type: 'value',
+                    },
+                ],
+                series: [
+                    {
+                        name: '联盟广告',
+                        type: 'line',
+                        stack: '总量',
+                        areaStyle: {normal: {}},
+                        data: data3,
+                        itemStyle: {
+                            normal: {
+                                color: 'rgb(108, 182, 245)'
+                            }
+                        },
+                        areaStyle: {
+                            normal: {
+                                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                    offset: 1,
+                                    color: 'rgb(255, 255, 255)'
+                                }, {
+                                    offset: 0,
+                                    color: 'rgb(108, 182, 245)'
+                                }])
+                            }
+                        },
+                    },
+                ],
             });
         },
     },

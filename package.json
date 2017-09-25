@@ -1,0 +1,27 @@
+{
+  "name": "demo",
+  "version": "1.0.0",
+  "description": "web demo ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wuxingjiang/demo.git"
+  },
+  "keywords": [
+    "demo"
+  ],
+  "author": "wuxingjiang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wuxingjiang/demo/issues"
+  },
+  "homepage": "https://github.com/wuxingjiang/demo#readme",
+  "devDependencies": {
+    "eslint": "^3.15.0",
+    "eslint-config-google": "^0.7.1",
+    "polymer-loader": "^1.0.0"
+  }
+}

@@ -1,0 +1,21 @@
+<component name="libraryTable">
+  <library name="Generated files" type="javaScript">
+    <properties>
+      <sourceFilesUrls>
+        <item url="file://$PROJECT_DIR$/js/checkphone_GBK.min.js" />
+        <item url="file://$PROJECT_DIR$/js/jq.min.js" />
+        <item url="file://$PROJECT_DIR$/js/checkphoneH5_GBK.min.js" />
+        <item url="file://$PROJECT_DIR$/js/checkphoneh5.min.js" />
+        <item url="file://$PROJECT_DIR$/js/checkphone.min.js" />
+      </sourceFilesUrls>
+    </properties>
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/js/checkphone_gbk.min.js" />
+      <root url="file://$PROJECT_DIR$/js/jq.min.js" />
+      <root url="file://$PROJECT_DIR$/js/checkphoneh5_gbk.min.js" />
+      <root url="file://$PROJECT_DIR$/js/checkphoneh5.min.js" />
+      <root url="file://$PROJECT_DIR$/js/checkphone.min.js" />
+    </CLASSES>
+    <SOURCES />
+  </library>
+</component>

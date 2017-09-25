@@ -1,0 +1,39 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<button id="button">click</button>
+<a href="http://www.baidu.com" target="_self">www.baidu.com</a>
+<input type="file" id="file">
+  <!--<script src="http://imgcd.hexun.com/js/jquery.js"></script>-->
+<script src="./js/jq.js"></script>
+  <script src="./js/promise.polyfill.min.js"></script>
+
+  <script src="./js/checkphone.js"></script>
+  <script>
+    $(function () {
+      var checkPhone = new RealInformation();
+      checkPhone.init().then(
+        function () {
+          alert('成功');
+        }
+      ); // 调绑定弹窗
+      document.getElementById('button').onclick= function () {
+        document.getElementById('file').click()
+
+        setTimeout(function () {
+          document.getElementById('file').click();
+          console.log('212')
+
+        }, 5000)
+
+      }
+    })
+
+  </script>
+</body>
+</html>
